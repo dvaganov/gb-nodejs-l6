@@ -1,8 +1,8 @@
 let config = {
     host: 'localhost',
-    database: 'todo',
+    database: 'nodejs',
     user: 'root',
     password: ''
 };
 
-modules.exports = config;
+module.exports = config;
