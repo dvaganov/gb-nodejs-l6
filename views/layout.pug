@@ -1,0 +1,17 @@
+doctype html
+html
+    head
+        link(rel='stylesheet', href='/main.css')
+        title!= title
+
+    body
+        div.left
+            h1!= title
+
+            nav
+                ul
+                    li: a(href='/') Главная
+                    li: a(href='/add') Добавить
+
+        div.right
+            block content

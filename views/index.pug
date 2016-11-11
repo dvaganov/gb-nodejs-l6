@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    each note in notes
+        div.note(data-id=note.id)
+            p.text= note.text
+            p.completed= `Выполнено: ${note.completed}`
+            nav.btn
+                a.edit(href=`/edit/${note.id}`) Редактировать
+                a.delete(href=`/delete/${note.id}`) Удалить
+    else
+        p Записей пока нет
+
+    form(method='post' action='/news')

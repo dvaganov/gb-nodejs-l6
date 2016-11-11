@@ -1,0 +1,6 @@
+extends layout
+
+block content
+    form(action='/add', method='post')
+        input(placeholder='Текст заметки', name='text')
+        input(type='submit', value='Добавить')

@@ -4,6 +4,10 @@ const Query = require('./core/query.js')
 
 class Note {
     constructor(fields) {
+        // Defaults
+        this.text = '';
+        this.completed = 'false';
+
         if (fields) {
             for (let key in fields) {
                 this[key] = fields[key];
