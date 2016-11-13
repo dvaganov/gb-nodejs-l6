@@ -1,4 +1,4 @@
-# gb-nodejs-l5
+# gb-nodejs-l6
 Для запуска используйте команду `npm install && node main`
 
 ## Требования
