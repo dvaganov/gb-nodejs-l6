@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    if (err)
+        p= err
+
+    form(method='post', action='/users/signin')
+        input(name='name', placeholder='Username')
+        input(type='password', name='password', placeholder='Password')
+        label Запомнить меня 
+            input(type='checkbox', checked, name='save')
+        input(type='submit', value='Sign In')

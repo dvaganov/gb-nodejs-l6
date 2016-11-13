@@ -2,9 +2,18 @@
 
 const mysql = require('mysql');
 
-class Db {
-    constructor(config) {
-        this._pool = mysql.createPool(config);
+let instance = null;
+
+// Singleton class
+class DataBase {
+    constructor() {
+        this._pool = mysql.createPool(DataBase.config);
+
+        if (!instance) {
+            instance = this;
+        }
+
+        return instance;
     }
 
     getConnection(callback) {
@@ -30,6 +39,10 @@ class Db {
         });
         return this;
     }
+
+    static init(config) {
+        DataBase.config = config;
+    }
 }
 
-module.exports = Db;
+module.exports = DataBase;

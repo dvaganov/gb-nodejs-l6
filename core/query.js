@@ -1,8 +1,10 @@
 'use strict'
 
+const DataBase = require('./database');
+
 class Query {
-    constructor(db, tableName) {
-        this.db = db;
+    constructor(tableName) {
+        this.db = new DataBase();
         this.tableName = tableName;
     }
 
@@ -18,26 +20,44 @@ class Query {
         return this;
     }
 
-    read(columns, condition, callback) {
+    read(params, callback) {
         let data = [],
             sql = 'SELECT ';
 
-        if (columns) {
+        params = params || {};
+
+        if (params.columns) {
             sql += '??';
-            data.push(columns);
+            data.push(params.columns);
         } else {
-            sql += '*'
+            sql += `${this.tableName}.*`
+        }
+
+        if (params.join && params.join.columns) {
+            sql += ', ??';
+            data.push(params.join.columns);
         }
 
         sql += ' FROM ??'
         data.push(this.tableName);
 
-        if (condition) {
-            sql += ' WHERE ?';
-            data.push(condition);
+        if (params.join) {
+            sql += ' JOIN ?? ON ?? = ??';
+            data.push(params.join.table);
+            data.push.apply(data, params.join.condition);
         }
 
-       this.db.query(sql, data, callback);
+        if (params.condition) {
+            sql += ' WHERE ?? = ?';
+            data.push.apply(data, params.condition);
+        }
+
+        if (params.limit) {
+            sql += ' LIMIT ?';
+            data.push(params.limit);
+        }
+
+        this.db.query(sql, data, callback);
         return this;
     }
 

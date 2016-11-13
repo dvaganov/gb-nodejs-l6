@@ -1,7 +1,7 @@
 extends layout
 
 block content
-    form(action=`/edit/${note.id}`, method='post')
-        input(name='text', value=note.text)
-        input(name='completed', value=note.completed)
+    form(action=`/notes/edit/${note.id}`, method='post')
+        input(name='title', value=note.title)
+        textarea(name='content')= note.content
         input(type='submit', value='Изменить')

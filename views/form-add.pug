@@ -1,6 +1,7 @@
 extends layout
 
 block content
-    form(action='/add', method='post')
-        input(placeholder='Текст заметки', name='text')
+    form(action='/notes/add', method='post')
+        input(placeholder='Заголовок заметки', name='title')
+        textarea(name='content')
         input(type='submit', value='Добавить')

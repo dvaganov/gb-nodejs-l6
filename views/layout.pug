@@ -11,7 +11,15 @@ html
             nav
                 ul
                     li: a(href='/') Главная
-                    li: a(href='/add') Добавить
+                    if (user)
+                        li: a(href='/notes/add') Добавить
+                        li: a(href='/users/signout') Выйти
+                    else
+                        li: a(href='/users/signup') Регистрация
+                        li: a(href='/users/signin') Войти
 
         div.right
+            if (user)
+                p= `Добро пожаловать, ${user.firstName || user.name}!`
+
             block content

@@ -18,7 +18,8 @@ html, body {
     padding: 50px;
     min-height: 100vh;
     float: left;
-    border-left: solid black 5px;
+    /* border-left: solid black 5px; */
+    box-shadow: -3px 0 5px gray;
 }
 
 .right::after {
@@ -34,11 +35,15 @@ html, body {
 .note {
     position: relative;
     box-sizing: border-box;
-    background-color: #88f;
-    width: 400px;
+    background-color: #aaf;
+    width: 300px;
     float: left;
     padding: 10px;
     margin: 10px;
+}
+
+.note:hover {
+    box-shadow: 3px 3px 5px;
 }
 
 .note > nav {

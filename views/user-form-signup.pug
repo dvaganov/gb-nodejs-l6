@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    if (err)
+        p= err
+
+    form(method='post', action='/users/signup')
+        input(name='name', placeholder='User name')
+        input(name='firstName', placeholder='Your first name')
+        input(type='password', name='password', placeholder='Password')
+        input(type='submit', value='Sign Up')
