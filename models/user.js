@@ -10,7 +10,7 @@ let saltRounds = 10;
 class User {
     static findByID(id, cb) {
         let params = {
-            condition: {id: id}
+            condition: ['id', id]
         };
 
         query.read(params, (result) => {
@@ -23,7 +23,7 @@ class User {
 
     static findByName(name, cb) {
         let params = {
-            condition: {name: name}
+            condition: ['name', name]
         };
 
         query.read(params, (result) => {
@@ -36,7 +36,7 @@ class User {
 
     static findByAuthKey(authKey, cb) {
         let params = {
-            condition: {authKey: authKey}
+            condition: ['authKey', authKey]
         };
 
         query.read(params, (result) => {

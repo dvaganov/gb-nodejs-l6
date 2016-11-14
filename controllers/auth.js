@@ -90,11 +90,14 @@ let UserController = {
 
         if (authKey) {
             User.findByAuthKey(authKey, (user) => {
-                if (user)
+                if (user) {
                     req.session.user = user;
+                }
+                next();
             });
+        } else {
+            next();
         }
-        next();
     },
 
     mustBeAuth: (req, res, next) => {
