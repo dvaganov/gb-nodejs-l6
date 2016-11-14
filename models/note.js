@@ -44,7 +44,7 @@ class Note {
         let params = {
             join: {
                 table: 'Users',
-                columns: ['name', 'firstName'],
+                columns: ['name', 'name'],
                 condition: ['userID', 'Users.id']
             }
         };
@@ -64,16 +64,20 @@ class Note {
         let params = {
             join: {
                 table: 'Users',
-                columns: ['name', 'firstName'],
+                columns: ['name', 'name'],
                 condition: ['userID', 'Users.id']
             },
             condition: [`${tableName}.id`, id]
         };
 
         query.read(params, (result) => {
+            let note = null;
+
             if (result.length === 1) {
-                callback(new Note(result[0]));
+                note = new Note(result[0]);
             }
+
+            callback(note);
         });
     }
 }

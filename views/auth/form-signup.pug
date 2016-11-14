@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+    if (err)
+        p= err
+
+    form(method='post', action='/auth/signup')
+        input(type='email', name='email', placeholder='Your email', required)
+        input(name='name', placeholder='Your name', required)
+        input(type='password', name='password', placeholder='Password', required)
+        input(type='submit', value='Sign Up')

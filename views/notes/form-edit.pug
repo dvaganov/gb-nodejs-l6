@@ -1,6 +1,9 @@
-extends layout
+extends ../layout
 
 block content
+    if (err)
+        p= err
+
     form(action=`/notes/edit/${note.id}`, method='post')
         input(name='title', value=note.title)
         textarea(name='content')= note.content

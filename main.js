@@ -1,18 +1,13 @@
 'use strict'
 
-// Import app modules
 const express = require('express');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('cookie-session');
 
-const passport = require('./passport.js');
-
 // Setup DataBase
 require('./core/database.js').init(require('./config.js'));
-
-// Import controllers
-const NoteController = require('./controllers/note.js');
-const AuthController = require('./controllers/auth.js');
+const passport = require('./passport.js');
 
 const PORT = 8888;
 let app = express();
@@ -21,66 +16,47 @@ let app = express();
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
 
-// Setup parser
+// Routes
+let auth = require('./auth.js');
+let notes = require('./notes.js');
 
 // Setup middlewares
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(cookieParser());
+
+// Enable session
 app.use(session({
     name: 'session',
     keys: ['secret']
 }));
-app.use(cookieParser());
-app.use(AuthController.restore);
+
+// Enable passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Restore user
 app.use((req, res, next) => {
-    res.locals.user = req.session.user;
-    next();
+    let authKey = req.cookies.authKey;
+
+    if (!req.user && authKey) {
+        auth.restoreUser(authKey, req.session, next);
+    } else {
+        next();
+    }
+});
+app.use((req, res, next) => {
+    req.user = req.user || req.session.user || {id: 0};
+    res.locals.user = req.user;
+    return next();
 });
 
 // Setup routes
-app.get('/', NoteController.listAll);
-
-// app.route('/notes/add')
-//     .all(AuthController.mustBeAuth)
-//     .get(NoteController.new)
-//     .post(urlEncodedParser, NoteController.add);
-
-// app.route('/notes/edit/:id')
-//     .all(AuthController.mustBeAuth)
-//     .get(NoteController.edit)
-//     .post(urlEncodedParser, NoteController.update);
-
-// app.route('/notes/delete/:id')
-//     .all(AuthController.mustBeAuth)
-//     .get(NoteController.delete);
-
-// app.route('/users/signup')
-//     .get(AuthController.signup)
-//     .post(urlEncodedParser, AuthController.add);
-
-// app.route('/users/signin')
-//     .get(AuthController.signin)
-//     .post(urlEncodedParser, AuthController.verify);
-
-// app.route('/users/signout')
-//     .all(AuthController.mustBeAuth)
-//     .get(AuthController.signout);
-
-app.route('/auth/github')
-    .get(passport.authenticate('github'));
-
-app.route('/auth/github/cb')
-    .get(
-        passport.authenticate('github', {failureRiderect: '/users/signin'}),
-        (req, res) => {
-            res.redirect('/');
-        }
-    );
-
-let auth = require('./auth.js');
+app.get('/', (req, res, next) => {
+    res.redirect('/notes');
+});
 app.use('/auth', auth);
+app.use('/notes', notes);
 
 // Run server
 app.listen(PORT, () => {

@@ -5,7 +5,7 @@ block content
         article.note(data-id=note.id)
             h3= note.title
             p.content= note.content
-            p.author= `Автор: ${note.firstName || note.name}`
+            p.author= `Автор: ${note.name}`
             if (user && note.isAuthor(user.id))
                 nav.btn
                     a.edit(href=`/notes/edit/${note.id}`) Редактировать

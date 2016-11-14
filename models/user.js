@@ -14,23 +14,31 @@ class User {
         };
 
         query.read(params, (result) => {
-            if (result.length === 1)
-                cb(new User(result[0]));
-            else
-                cb(null);
+            let user = null;
+
+            if (result.length === 1) {
+                user = new User(result[0]);
+                user.new = false;
+            }
+
+            cb(user);
         });
     }
 
-    static findByName(name, cb) {
+    static findByEmail(email, cb) {
         let params = {
-            condition: ['name', name]
+            condition: ['email', email]
         };
 
         query.read(params, (result) => {
-            if (result.length === 1)
-                cb(new User(result[0]));
-            else
-                cb(null);
+            let user = null;
+
+            if (result.length === 1) {
+                user = new User(result[0]);
+                user.new = false;
+            }
+
+            cb(user);
         });
     }
 
@@ -40,17 +48,19 @@ class User {
         };
 
         query.read(params, (result) => {
-            if (result.length === 1)
-                cb(new User(result[0]));
-            else
-                cb(null);
+            let user = null;
+
+            if (result.length === 1) {
+                user = new User(result[0]);
+                user.new = false;
+            }
+
+            cb(user);
         });
     }
 
     constructor(fields) {
-        this.id = 0;
-        this.name = '';
-        this.firstName = '';
+        this.new = true;
 
         if (fields) {
             for (let key in fields) {
@@ -87,23 +97,26 @@ class User {
     delete(cb) {
     }
 
-    update(cb) {
-    }
-
     save(cb) {
-        bcrypt.hash(this.name + new Date().getTime(), 1, (err, hash) => {
-            if (err)
-                throw err;
+        let data = {
+            email: this.email,
+            name: this.name,
+            githubID: this.githubID || null
+        }
 
-            let data = {
-                name: this.name,
-                firstName: this.firstName,
-                hash: this.hash,
-                authKey: hash
-            };
+        if (this.new) {
+            bcrypt.hash(this.email + new Date().getTime(), 1, (err, authKey) => {
+                if (err)
+                    throw err;
 
-            query.create(data, cb);
-        });
+                data.hash = this.hash;
+                data.authKey = authKey;
+
+                query.create(data, cb);
+            });
+        } else {
+            query.update(data, {id: this.id}, cb);
+        }
 
         return this;
     }
