@@ -2,11 +2,12 @@
 
 const express = require('express');
 
-const passport = require('./passport');
-const User = require('./models/user.js');
+const passport = require('../passport');
+const User = require('../models/user.js');
 
 let auth = express();
 
+// Restore user by 'save me' option
 auth.restoreUser = (authKey, session, cb) => {
     User.findByAuthKey(authKey, (user) => {
         session.user = user;

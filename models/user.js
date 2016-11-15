@@ -112,7 +112,11 @@ class User {
                 data.hash = this.hash;
                 data.authKey = authKey;
 
-                query.create(data, cb);
+                query.create(data, (result) => {
+                    if (result)
+                        this.id = result.insertId;
+                    cb(result);
+                });
             });
         } else {
             query.update(data, {id: this.id}, cb);

@@ -2,8 +2,8 @@
 
 const express = require('express');
 
-const passport = require('./passport.js');
-const Note = require('./models/note.js');
+const passport = require('../passport.js');
+const Note = require('../models/note.js');
 
 let notes = express();
 
@@ -21,7 +21,7 @@ notes.route('/add')
         let note = new Note({
             title: req.body.title,
             content: req.body.content,
-            userID: req.session.user.id
+            userID: req.user.id
         });
 
         note.save(() => {
@@ -67,10 +67,8 @@ notes.all('/delete/:id',
     passport.mustBeAuth,
     (req, res) => {
         Note.findOne(req.params.id, (note) => {
-            if (!note) {
-                res.status(400).redirect('/');
-            } else if (note.userID !== req.session.user) {
-                res.status(403).redirect('/');
+            if (!note || note.userID !== req.user.id) {
+                res.redirect('/');
             } else {
                 note.delete(() => {
                     res.redirect('/');
